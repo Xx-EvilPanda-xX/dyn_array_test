@@ -34,10 +34,19 @@ fn get_dims() -> (usize, usize) {
 }
 
 fn print_arr(arr: &DynArray<char, 2>) {
-    for y in 0..arr.dims()[1] {
-        for x in 0..arr.dims()[0] {
-            print!("{} ", arr[[x, y]]);
-        }
-        println!();
+    clear();
+    for (i, c) in arr {
+        cursor_move_to(i);
+        print!("{}", c);
     }
+}
+
+fn cursor_move_to(pos: [usize; 2]) {
+    use crossterm::ExecutableCommand;
+    std::io::stdout().execute(crossterm::cursor::MoveTo(pos[0] as u16 * 2, pos[1] as u16)).unwrap();
+}
+
+fn clear() {
+    use crossterm::ExecutableCommand;
+    std::io::stdout().execute(crossterm::terminal::Clear(crossterm::terminal::ClearType::All)).unwrap();
 }
